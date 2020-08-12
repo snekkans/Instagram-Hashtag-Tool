@@ -6,7 +6,6 @@ from itertools import takewhile
 
 import instaloader
 import hashtagObject
-import generatorObject
 from collections import Counter
 from datetime import datetime, timedelta
 from instaloader import Hashtag
@@ -27,8 +26,6 @@ tempFiltered = []
 last = datetime.utcnow() - timedelta(days=30)
 recent = datetime.utcnow() - timedelta(days=2)
 
-gen = generatorObject.HashtagGenerator(MIN_POSTS,MAX_POSTS,last,recent,L,hashtag)
-print(gen.MIN_POSTS,gen.MAX_POSTS,gen.last,gen.recent,gen.L,gen.hashtag)
 posts = L.get_hashtag_posts(hashtag.name)
 print(hashtag.mediacount, "total posts for hashtag", hashtag.name, "\n")  # counts all posts in hashtag
 # for post in instaloader.Hashtag.from_name(L.context, 'legoleaks').get_posts():
