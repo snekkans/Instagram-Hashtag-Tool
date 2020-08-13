@@ -3,7 +3,6 @@
 # Press Shift+F10 to execute it or replace it with your code.
 # Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
 from itertools import takewhile
-from tkinter import ttk
 from tkinter.messagebox import showinfo
 
 import instaloader
@@ -13,9 +12,6 @@ from datetime import datetime, timedelta
 from instaloader import Hashtag
 from tkinter import *
 
-# MIN_POSTS = 14999
-# MAX_POSTS = 60001
-
 L = instaloader.Instaloader()
 # hashtag = Hashtag.from_name(L.context, "rafmminiatures")
 
@@ -23,13 +19,6 @@ rawHashtagList = []
 masterHashtagList = []
 countedHashtags = []
 tempFiltered = []
-
-# get all posts given a hashtag
-
-# last = datetime.utcnow() - timedelta(days=30)
-# recent = datetime.utcnow() - timedelta(days=2)
-
-# posts = L.get_hashtag_posts(hashtag.name)
 
 
 def generate_hashtags(min_posts, max_posts, last, recent, hashtag, posts):
