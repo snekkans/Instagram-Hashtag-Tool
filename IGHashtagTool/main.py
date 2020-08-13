@@ -98,7 +98,7 @@ def test():
     print(min_posts, max_posts, last, recent, hashtag)
 
     # run code
-    #generate_hashtags(min_posts, max_posts, last, recent, hashtag, posts)
+    generate_hashtags(min_posts, max_posts, last, recent, hashtag, posts)
 
 
 root = Tk()
