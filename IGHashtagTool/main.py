@@ -3,6 +3,9 @@
 # Press Shift+F10 to execute it or replace it with your code.
 # Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
 from itertools import takewhile
+from tkinter import ttk
+from tkinter.messagebox import showinfo
+
 import instaloader
 import hashtagObject
 from collections import Counter
@@ -20,7 +23,6 @@ rawHashtagList = []
 masterHashtagList = []
 countedHashtags = []
 tempFiltered = []
-
 
 # get all posts given a hashtag
 
@@ -84,8 +86,7 @@ def generate_hashtags(min_posts, max_posts, last, recent, hashtag, posts):
 
 
 def test():
-    print("pressed button")
-    # set values
+    global countedHashtags
     min_posts = int(entry_min.get())
     max_posts = int(entry_max.get())
     timeframe = int(entry_days.get())
@@ -95,14 +96,20 @@ def test():
     hashtag = Hashtag.from_name(L.context, str(entry_hashtag.get()))
     posts = L.get_hashtag_posts(hashtag.name)
 
-    print(min_posts, max_posts, last, recent, hashtag)
-
     # run code
     generate_hashtags(min_posts, max_posts, last, recent, hashtag, posts)
+    popup_showinfo(countedHashtags)
+
+
+def popup_showinfo(items):
+    log = "Hashtag | Total Posts | Recent Posts\n"
+    for i in items:
+        log += str(i.getName())+" | "+str(i.getPostCount())+" | "+str(i.getRecentPosts())+"\n"
+    showinfo("Hashtagger", log)
 
 
 root = Tk()
-root.geometry("640x480")
+root.geometry("320x360")
 frame = Frame(root)
 frame.pack()
 
@@ -143,6 +150,9 @@ entry_hashtag.pack(padx=5, pady=5)
 
 button_start = Button(frame, text="Get Hashtags", command=test)
 button_start.pack()
+
+label_log = Label(frame, text="Enter your values and press the start button!")
+label_log.pack()
 
 root.title("Hashtagger")
 root.mainloop()
