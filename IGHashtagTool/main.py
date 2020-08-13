@@ -3,12 +3,12 @@
 # Press Shift+F10 to execute it or replace it with your code.
 # Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
 from itertools import takewhile
-
 import instaloader
 import hashtagObject
 from collections import Counter
 from datetime import datetime, timedelta
 from instaloader import Hashtag
+from tkinter import *
 
 MIN_POSTS = 14999
 MAX_POSTS = 60001
@@ -25,6 +25,22 @@ tempFiltered = []
 
 last = datetime.utcnow() - timedelta(days=30)
 recent = datetime.utcnow() - timedelta(days=2)
+
+
+def test():
+    print("pressed button")
+    startButton.destroy()
+
+
+root = Tk()
+root.geometry("640x480")
+frame = Frame(root)
+frame.pack()
+startButton = Button(frame, text="Get Hashtags", command=test)
+startButton.pack()
+
+root.title("Hashtagger")
+root.mainloop()
 
 posts = L.get_hashtag_posts(hashtag.name)
 print(hashtag.mediacount, "total posts for hashtag", hashtag.name, "\n")  # counts all posts in hashtag
@@ -86,7 +102,7 @@ for i in countedHashtags:
         print("Finished getting posts for hashtag", i.getName() + "\n")
         i.setRecentPosts(temp)
     except:
-        print("Can't find Counted Hashtag",i)
+        print("Can't find Counted Hashtag", i)
 
 for i in countedHashtags:
     print(i.getName(), i.getPostCount(), i.getRecentPosts())
