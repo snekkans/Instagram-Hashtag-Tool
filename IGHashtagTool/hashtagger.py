@@ -58,6 +58,7 @@ def generate_hashtags(min_posts, max_posts, hashtag, posts):
                 print(i + " NOT in range", count)
             else:
                 print(i + " IS in range", count)
+
                 try:
                     print("Begin getting posts from last 48 hours for", new_tag.getName())
                     temp = 0
