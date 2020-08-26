@@ -28,14 +28,14 @@ def generate_hashtags(min_posts, max_posts, hashtag, posts):
     global lastMonth, last48, last24
     print(hashtag.mediacount, "total posts for hashtag", hashtag.name, "\n")  # counts all posts in hashtag
     print("Begin finding relevant posts\n")
-    # get posts in timeframe
+    # get hashtags for all posts in the last month
     for post in takewhile(lambda p: p.date_utc > lastMonth, posts):
         # L.download_post(post, target='#' + hashtag.name)
         print(post.date_utc, lastMonth, lastMonth < post.date_utc)
         rawHashtagList.append(post.caption_hashtags)
     print("Finished finding relevant posts!\n")
     print("Begin generating hashtag list\n")
-    # put all the items into one big list
+    # filter out repeated hashtags and get a proper list out of it
     for i in rawHashtagList:
         for j in i:
             masterHashtagList.append(j)
@@ -52,36 +52,71 @@ def generate_hashtags(min_posts, max_posts, hashtag, posts):
             h = Hashtag.from_name(L.context, i)
             count = h.mediacount
             # if the count's not in the range
+
+            new_tag = hashtagObject.HashtagObj(h.name, count, 0, 0, 0)
+            # post counting hypothetically goes here
+            countedHashtags.append(new_tag)
+
             if max_posts <= count or min_posts >= count:
                 print(i + " NOT in range", count)
             else:
                 print(i + " IS in range", count)
-                new_tag = hashtagObject.HashtagObj(h.name, count, 0, 0, 0)
+                # new_tag = hashtagObject.HashtagObj(h.name, count, 0, 0, 0)
 
-                #post counting hypothetically goes here
+                # post counting hypothetically goes here
 
-                countedHashtags.append(new_tag)
+                # countedHashtags.append(new_tag)
         except:
             print("Can't find hashtag", i)
     print("\nFinished filtering hashtags by post count with", len(countedHashtags), "results\n")
 
-
-    #actual post counting starts here
+    # actual post counting starts here
     for i in countedHashtags:
-        nposts = L.get_hashtag_posts(i.getName())
+
         try:
-            print("Begin getting posts from last 48 hours for", i.getName())
+            # print("Begin getting posts from last 24 hours for", i.getName())
             temp = 0
+            nposts = L.get_hashtag_posts(i.getName())
+            for post in takewhile(lambda p: p.date_utc > last24, nposts):
+                # print(post.date_utc, last24, last24 < post.date_utc)
+                temp += 1
+            print("Found", temp, "posts for", i.getName(), 'over 24 hours ')
+            i.setDayPosts(temp)
+        except:
+            print("Error getting posts over last 24 hours for", i.getName())
+
+        try:
+            # print("Begin getting posts from last 48 hours for", i.getName())
+            temp = 0
+            nposts = L.get_hashtag_posts(i.getName())
             for post in takewhile(lambda p: p.date_utc > last48, nposts):
-                print(post.date_utc, last48, last48 < post.date_utc)
+                # print(post.date_utc, last48, last48 < post.date_utc)
                 temp += 1
             print("Found", temp, "posts for", i.getName(), 'over 48 hours ')
             i.setLast2DaysPosts(temp)
         except:
             print("Error getting posts over last 48 hours for", i.getName())
 
+        try:
+            # print("Begin getting posts from last month for", i.getName())
+            temp = 0
+            nposts = L.get_hashtag_posts(i.getName())
+            for post in takewhile(lambda p: p.date_utc > lastMonth, nposts):
+                # print(post.date_utc, last48, last48 < post.date_utc)
+                temp += 1
+            print("Found", temp, "posts for", i.getName(), 'over last month')
+            i.setMonthPosts(temp)
+        except:
+            print("Error getting posts over last month for", i.getName())
+
+
+def get_hashtags_in_range(min_posts, max_posts):
+    temp_array = []
     for i in countedHashtags:
-        print(i.getName(), i.getPostCount(), i.getRecentPosts())
+        if max_posts >= i.getPostCount() >= min_posts:
+            temp_array.append(i)
+            print(i.getName(), i.getPostCount(), i.getDayPosts(), i.get2DaysPosts(), i.getMonthPosts())
+    return temp_array
 
 
 def test():
@@ -93,13 +128,14 @@ def test():
 
     # run code
     generate_hashtags(min_posts, max_posts, hashtag, posts)
-    popup_showinfo(countedHashtags)
+    popup_showinfo(get_hashtags_in_range(min_posts, max_posts))
 
 
 def popup_showinfo(items):
-    log = "Hashtag | Total Posts | 48 Hours Posts\n"
+    log = "Hashtag | Total Posts | 24 Hours | 48 Hours | 30 Days\n"
     for i in items:
-        log += str(i.getName()) + " | " + str(i.getPostCount()) + " | " + str(i.get2DaysPosts()) + "\n"
+        log += str(i.getName()) + " | " + str(i.getPostCount()) + " | " + str(i.getDayPosts()) + " | " + str(
+            i.get2DaysPosts()) + " | " + str(i.getMonthPosts()) + "\n"
     showinfo("Hashtagger", log)
 
 
