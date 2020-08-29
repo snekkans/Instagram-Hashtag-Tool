@@ -19,6 +19,8 @@ rawHashtagList = []
 masterHashtagList = []
 countedHashtags = []
 
+lastUsedHashtag = ""
+
 lastMonth = datetime.utcnow() - timedelta(days=30)
 last48 = datetime.utcnow() - timedelta(days=2)
 last24 = datetime.utcnow() - timedelta(days=1)
@@ -26,7 +28,9 @@ retrieved_data = False
 
 
 def generate_hashtags(min_posts, max_posts, hashtag, posts):
-    global lastMonth, last48, last24, retrieved_data, button_start
+    global lastMonth, last48, last24, retrieved_data, button_start, lastUsedHashtag
+    lastUsedHashtag = hashtag.name
+    retrieved_data = False
     print(hashtag.mediacount, "total posts for hashtag", hashtag.name, "\n")  # counts all posts in hashtag
     print("Begin finding relevant posts\n")
     # get hashtags for all posts in the last month
@@ -123,15 +127,25 @@ def get_hashtags_in_range(min_posts, max_posts):
 
 def test():
     global countedHashtags
-    min_posts = int(entry_min.get())
-    max_posts = int(entry_max.get())
-    hashtag = Hashtag.from_name(L.context, str(entry_hashtag.get()))
-    posts = L.get_hashtag_posts(hashtag.name)
-
-    # run code
-    if not retrieved_data:
-        generate_hashtags(min_posts, max_posts, hashtag, posts)
-    popup_showinfo(get_hashtags_in_range(min_posts, max_posts))
+    try:
+        min_posts = int(entry_min.get())
+    except:
+        showinfo("Error", "Enter a number for Minimum Posts")
+    try:
+        max_posts = int(entry_max.get())
+    except:
+        showinfo("Error", "Enter a number for Maximum Posts")
+    if str(entry_hashtag.get()) == "" or not str(entry_hashtag.get()).isalnum():
+        showinfo("Error", "Enter a valid Hashtag")
+    elif max_posts<min_posts:
+        showinfo("Error", "Minimum Posts must be less than Maximum Posts")
+    else:
+        hashtag = Hashtag.from_name(L.context, str(entry_hashtag.get()))
+        posts = L.get_hashtag_posts(hashtag.name)
+        # run code
+        if not retrieved_data or lastUsedHashtag != str(entry_hashtag.get()):
+            generate_hashtags(min_posts, max_posts, hashtag, posts)
+        popup_showinfo(get_hashtags_in_range(min_posts, max_posts))
 
 
 def popup_showinfo(items):
