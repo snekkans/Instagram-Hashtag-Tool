@@ -22,10 +22,11 @@ countedHashtags = []
 lastMonth = datetime.utcnow() - timedelta(days=30)
 last48 = datetime.utcnow() - timedelta(days=2)
 last24 = datetime.utcnow() - timedelta(days=1)
+retrieved_data = False
 
 
 def generate_hashtags(min_posts, max_posts, hashtag, posts):
-    global lastMonth, last48, last24
+    global lastMonth, last48, last24, retrieved_data, button_start
     print(hashtag.mediacount, "total posts for hashtag", hashtag.name, "\n")  # counts all posts in hashtag
     print("Begin finding relevant posts\n")
     # get hashtags for all posts in the last month
@@ -72,7 +73,6 @@ def generate_hashtags(min_posts, max_posts, hashtag, posts):
 
     # actual post counting starts here
     for i in countedHashtags:
-
         try:
             # print("Begin getting posts from last 24 hours for", i.getName())
             temp = 0
@@ -108,6 +108,8 @@ def generate_hashtags(min_posts, max_posts, hashtag, posts):
             i.setMonthPosts(temp)
         except:
             print("Error getting posts over last month for", i.getName())
+    button_start.text.set("Test")
+    retrieved_data = True
 
 
 def get_hashtags_in_range(min_posts, max_posts):
@@ -127,7 +129,8 @@ def test():
     posts = L.get_hashtag_posts(hashtag.name)
 
     # run code
-    generate_hashtags(min_posts, max_posts, hashtag, posts)
+    if not retrieved_data:
+        generate_hashtags(min_posts, max_posts, hashtag, posts)
     popup_showinfo(get_hashtags_in_range(min_posts, max_posts))
 
 
