@@ -125,7 +125,7 @@ def get_hashtags_in_range(min_posts, max_posts):
     return temp_array
 
 
-def test():
+def main():
     global countedHashtags
     try:
         min_posts = int(entry_min.get())
@@ -182,7 +182,7 @@ entry_hashtag = Entry(frame, width=20)
 entry_hashtag.insert(0, 'rafmminiatures')
 entry_hashtag.pack(padx=5, pady=5)
 
-button_start = Button(frame, text="Get Hashtags", command=test)
+button_start = Button(frame, text="Get Hashtags", command=main)
 button_start.pack()
 
 label_log = Label(frame, text="Enter your values and press the start button!")
