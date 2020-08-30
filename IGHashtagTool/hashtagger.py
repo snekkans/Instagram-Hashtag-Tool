@@ -112,7 +112,6 @@ def generate_hashtags(min_posts, max_posts, hashtag, posts):
             i.setMonthPosts(temp)
         except:
             print("Error getting posts over last month for", i.getName())
-    button_start.text.set("Test")
     retrieved_data = True
 
 
