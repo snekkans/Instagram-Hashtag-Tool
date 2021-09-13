@@ -13,6 +13,7 @@ from instaloader import Hashtag
 from tkinter import *
 
 L = instaloader.Instaloader()
+L.login("","")
 # hashtag = Hashtag.from_name(L.context, "rafmminiatures")
 
 rawHashtagList = []
@@ -25,7 +26,6 @@ lastMonth = datetime.utcnow() - timedelta(days=30)
 last48 = datetime.utcnow() - timedelta(days=2)
 last24 = datetime.utcnow() - timedelta(days=1)
 retrieved_data = False
-
 
 def generate_hashtags(min_posts, max_posts, hashtag, posts):
     global lastMonth, last48, last24, retrieved_data, button_start, lastUsedHashtag
@@ -44,7 +44,6 @@ def generate_hashtags(min_posts, max_posts, hashtag, posts):
     for i in rawHashtagList:
         for j in i:
             masterHashtagList.append(j)
-    # artopportunitiesmonthly
 
     c = Counter(masterHashtagList)
     hashtags = list(c)
@@ -66,14 +65,22 @@ def generate_hashtags(min_posts, max_posts, hashtag, posts):
                 print(i + " NOT in range", count)
             else:
                 print(i + " IS in range", count)
-                # new_tag = hashtagObject.HashtagObj(h.name, count, 0, 0, 0)
 
-                # post counting hypothetically goes here
+                #check all top posts here before adding to counted hashtags
 
-                # countedHashtags.append(new_tag)
+                new_tag = hashtagObject.HashtagObj(h.name, count, 0, 0, 0)
+                countedHashtags.append(new_tag)
         except:
             print("Can't find hashtag", i)
     print("\nFinished filtering hashtags by post count with", len(countedHashtags), "results\n")
+
+    #in this for loop, don't count the number of posts per set of hours
+    #instead, do this:
+    #for each hashtag in the counted hashtags
+    #go through top posts in that hashtag
+        #for each of those posts, check if it was made in the last n hours
+        #if it was, add it to the new list, otherwise discard it
+    #TODO: see above on how to restructure this for loop
 
     # actual post counting starts here
     for i in countedHashtags:
