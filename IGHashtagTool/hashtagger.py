@@ -13,7 +13,8 @@ from instaloader import Hashtag
 from tkinter import *
 
 L = instaloader.Instaloader()
-L.login("","")
+#TODO add username/password field to ui
+#L.login("","")
 # hashtag = Hashtag.from_name(L.context, "rafmminiatures")
 
 rawHashtagList = []
@@ -26,6 +27,11 @@ lastMonth = datetime.utcnow() - timedelta(days=30)
 last48 = datetime.utcnow() - timedelta(days=2)
 last24 = datetime.utcnow() - timedelta(days=1)
 retrieved_data = False
+
+def login(username,password):
+    # TODO add username/password field to ui
+    L.login(username, password)
+    # hashtag = Hashtag.from_name(L.context, "rafmminiatures")
 
 def generate_hashtags(min_posts, max_posts, hashtag, posts):
     global lastMonth, last48, last24, retrieved_data, button_start, lastUsedHashtag
@@ -133,6 +139,9 @@ def get_hashtags_in_range(min_posts, max_posts):
 
 def main():
     global countedHashtags
+    try:
+        login("","")
+    except:showinfo("Error","Invalid Credentials")
     try:
         min_posts = int(entry_min.get())
     except:
